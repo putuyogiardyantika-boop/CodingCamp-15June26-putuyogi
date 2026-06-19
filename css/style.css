@@ -1,0 +1,647 @@
+/* ============================================================
+   CSS Custom Properties
+   ============================================================ */
+:root {
+  --font-family:    'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-size-base: 16px;
+
+  /* Card & UI colors — always white/light regardless of time */
+  --card-bg:        #ffffff;
+  --card-border:    #e2e6ea;
+  --card-shadow:    0 4px 24px rgba(0, 0, 0, 0.18);
+  --card-radius:    16px;
+
+  /* Text on white cards */
+  --text-primary:   #1a1a2e;
+  --text-secondary: #555577;
+  --text-muted:     #9a9ab0;
+
+  /* Accent colors */
+  --accent-blue:    #5b6ee1;
+  --accent-red:     #e94560;
+  --accent-green:   #2ecc71;
+  --accent-gray:    #d0d4db;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+}
+
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Screen-reader only utility — visually hidden but accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+body {
+  font-family:  var(--font-family);
+  font-size:    var(--font-size-base);
+  color:        var(--text-primary);
+  min-height:   100vh;
+  background-attachment: fixed;
+  transition:   background 3s ease;
+  color-scheme: light; /* native browser UI (scrollbar, inputs) matches mode */
+}
+
+body.dark-mode {
+  color-scheme: dark;
+}
+
+/* ============================================================
+   Dark Mode — card gelap, font terang
+   ============================================================ */
+body.dark-mode {
+  --card-bg:        #1e2030;
+  --card-border:    #2e3150;
+  --card-shadow:    0 4px 24px rgba(0, 0, 0, 0.5);
+  --text-primary:   #e8eaf6;
+  --text-secondary: #a0a8cc;
+  --text-muted:     #5a6080;
+  --accent-blue:    #7c8eff;
+  --accent-green:   #4ade80;
+  --accent-gray:    #2e3150;
+}
+
+/* Dark mode input & todo item backgrounds */
+body.dark-mode .todo__form input[type="text"],
+body.dark-mode .links__form input,
+body.dark-mode .greeting__name-input {
+  background: #252840;
+  border-color: #3a3f6e;
+  color: var(--text-primary);
+}
+
+body.dark-mode .todo__form input[type="text"]::placeholder,
+body.dark-mode .links__form input::placeholder,
+body.dark-mode .greeting__name-input::placeholder {
+  color: var(--text-muted);
+}
+
+body.dark-mode .todo__item {
+  background: #252840;
+  border-color: #2e3150;
+}
+body.dark-mode .todo__item:hover { background: #2c3060; }
+
+body.dark-mode .todo__edit-input {
+  background: #252840;
+  border-color: var(--accent-blue);
+  color: var(--text-primary);
+}
+
+body.dark-mode .todo__btn { color: var(--text-secondary); }
+body.dark-mode .todo__btn:hover { background-color: #2e3150; }
+
+body.dark-mode #timer-reset {
+  background-color: #2e3150;
+  color: var(--text-primary);
+}
+
+body.dark-mode .theme-toggle {
+  background-color: #1e2030;
+  border-color: #3a3f6e;
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   Time-Based Background (latar — tidak diubah dari sebelumnya)
+   ============================================================ */
+body[data-time-theme="dawn"]      { background: linear-gradient(160deg, #1a0533 0%, #4a1942 30%, #c0533a 70%, #e8865a 100%); }
+body[data-time-theme="morning"]   { background: linear-gradient(160deg, #1a6fa8 0%, #4ab8e8 40%, #f7d76b 80%, #fdf0a0 100%); }
+body[data-time-theme="afternoon"] { background: linear-gradient(160deg, #1488cc 0%, #2b9fd4 40%, #87ceeb 75%, #e0f4ff 100%); }
+body[data-time-theme="evening"]   { background: linear-gradient(160deg, #f7971e 0%, #f4a94a 25%, #e8636a 60%, #c0406a 100%); }
+body[data-time-theme="dusk"]      { background: linear-gradient(160deg, #c0392b 0%, #8e44ad 40%, #2c3e6e 75%, #1a1a3e 100%); }
+body[data-time-theme="night"]     { background: linear-gradient(160deg, #0d0d1a 0%, #0f0c29 35%, #302b63 70%, #24243e 100%); }
+
+/* ============================================================
+   Typography & Semantic element resets
+   ============================================================ */
+h1, h2, h3 {
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+/* <time> and <output> are inline by default — make them block */
+time, output {
+  display: block;
+}
+
+/* Greeting live region wrapper */
+.greeting__live {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+/* ============================================================
+   Dashboard Grid
+   ============================================================ */
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  min-height: 100vh;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .dashboard { grid-template-columns: 1fr; padding: var(--spacing-md); }
+}
+
+/* ============================================================
+   Widget Card — solid white, same for ALL widgets including greeting
+   ============================================================ */
+.widget {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  transition: box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.widget:hover {
+  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.22);
+  transform: translateY(-2px);
+}
+
+.widget__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--card-border);
+  padding-bottom: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+  letter-spacing: 0.01em;
+}
+
+/* .hidden utility */
+.hidden { display: none !important; }
+
+/* ============================================================
+   Greeting Widget
+   ============================================================ */
+.widget--greeting {
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  /* Same white card as all others — no special background */
+}
+
+/* Time display — large, accent blue */
+.greeting__time {
+  font-size: clamp(2.8rem, 8vw, 4.5rem);
+  font-weight: 700;
+  color: var(--accent-blue);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+/* Date — smaller, muted */
+.greeting__date {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
+  font-weight: 400;
+}
+
+/* Greeting text — bold, dark */
+.greeting__text {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: var(--spacing-xs);
+}
+
+/* Name input row */
+.greeting__name-form {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  margin-top: var(--spacing-sm);
+}
+
+.greeting__name-input {
+  padding: 7px var(--spacing-md);
+  border: 1.5px solid var(--card-border);
+  border-radius: 8px;
+  background: #f8f9fa;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-family: var(--font-family);
+  width: 170px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+}
+
+.greeting__name-input::placeholder { color: var(--text-muted); }
+.greeting__name-input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(91, 110, 225, 0.15);
+}
+
+.greeting__name-btn {
+  padding: 7px var(--spacing-md);
+  background-color: var(--accent-blue);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.1s ease;
+}
+.greeting__name-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+/* ============================================================
+   Focus Timer
+   ============================================================ */
+.widget--timer {
+  text-align: center;
+  align-items: center;
+}
+
+/* Big timer display — accent blue, matching the reference image */
+.timer__display {
+  font-size: clamp(2.8rem, 7vw, 4rem);
+  font-weight: 700;
+  color: var(--accent-blue);
+  letter-spacing: 0.06em;
+  font-family: var(--font-family);
+  transition: color 0.3s ease;
+}
+
+.timer__display--done {
+  color: var(--accent-green);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+.timer__controls {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.timer__controls button {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: pointer;
+  min-width: 80px;
+  transition: filter 0.2s ease, transform 0.1s ease, opacity 0.2s ease;
+}
+
+/* Start = blue, Stop = red, Reset = light gray */
+#timer-start { background-color: var(--accent-blue);  color: #fff; }
+#timer-stop  { background-color: var(--accent-red);   color: #fff; }
+#timer-reset { background-color: var(--accent-gray);  color: var(--text-primary); }
+
+.timer__controls button:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-1px); }
+.timer__controls button:disabled             { opacity: 0.38; cursor: not-allowed; transform: none !important; }
+
+.timer__notification {
+  color: var(--accent-green);
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-top: var(--spacing-xs);
+  font-family: var(--font-family);
+}
+
+/* ============================================================
+   To-Do List
+   ============================================================ */
+.todo__form {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.todo__form input[type="text"] {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1.5px solid var(--card-border);
+  border-radius: 8px;
+  background: #f8f9fa;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: var(--font-family);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.todo__form input[type="text"]::placeholder { color: var(--text-muted); }
+.todo__form input[type="text"]:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(91, 110, 225, 0.15);
+}
+
+.todo__form button[type="submit"] {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--accent-blue);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: filter 0.2s ease, transform 0.1s ease;
+}
+.todo__form button[type="submit"]:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+.todo__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.todo__item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 10px var(--spacing-md);
+  background: #f8f9fa;
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  transition: background-color 0.15s ease;
+  animation: fadeInDown 0.22s ease forwards;
+}
+
+.todo__item:hover { background-color: #eef0f7; }
+
+.todo__checkbox {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--accent-blue);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.todo__text {
+  flex: 1;
+  font-size: 0.95rem;
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  word-break: break-word;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.todo__item--done .todo__text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.todo__btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 2px 5px;
+  border-radius: 5px;
+  color: var(--text-secondary);
+  transition: background-color 0.15s ease;
+  flex-shrink: 0;
+}
+.todo__btn:hover { background-color: #e2e6ea; }
+
+.todo__edit-input {
+  flex: 1;
+  padding: 5px var(--spacing-sm);
+  border: 1.5px solid var(--accent-blue);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: var(--font-family);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(91, 110, 225, 0.15);
+}
+
+/* Duplicate warning */
+.todo__input--duplicate {
+  border-color: #f0a500 !important;
+  box-shadow: 0 0 0 3px rgba(240, 165, 0, 0.2) !important;
+  animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-5px); }
+  75%       { transform: translateX(5px); }
+}
+
+.todo__duplicate-warning {
+  font-size: 0.83rem;
+  color: #d97700;
+  padding: 3px var(--spacing-sm);
+  margin-top: -6px;
+  animation: fadeInDown 0.2s ease;
+}
+
+/* ============================================================
+   Quick Links
+   ============================================================ */
+.links__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.links__form input {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1.5px solid var(--card-border);
+  border-radius: 8px;
+  background: #f8f9fa;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: var(--font-family);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.links__form input::placeholder { color: var(--text-muted); }
+.links__form input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(91, 110, 225, 0.15);
+}
+
+.links__form button[type="submit"] {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--accent-blue);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.1s ease;
+}
+.links__form button[type="submit"]:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+.links__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: var(--spacing-sm);
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: visible;
+  padding: 8px 8px 4px 4px; /* ruang untuk tombol × yang overflow */
+}
+
+.link__item {
+  position: relative;
+  overflow: visible; /* tombol × tidak terpotong */
+  animation: fadeInScale 0.22s ease forwards;
+}
+
+.link__btn {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-sm);
+  background-color: var(--accent-blue);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: filter 0.2s ease, transform 0.1s ease;
+}
+.link__btn:hover { filter: brightness(1.12); transform: translateY(-2px); }
+
+.link__delete {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  background-color: var(--accent-red);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.link__item:hover .link__delete { opacity: 1; }
+
+.links__empty {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: var(--spacing-md);
+  font-family: var(--font-family);
+}
+
+/* ============================================================
+   Theme Toggle Button
+   ============================================================ */
+.theme-toggle {
+  position: fixed;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--card-border);
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.theme-toggle:hover { transform: scale(1.1) rotate(20deg); border-color: var(--accent-blue); }
+
+/* ============================================================
+   Scrollbar
+   ============================================================ */
+.todo__list::-webkit-scrollbar,
+.links__grid::-webkit-scrollbar { width: 4px; }
+.todo__list::-webkit-scrollbar-track,
+.links__grid::-webkit-scrollbar-track { background: transparent; }
+.todo__list::-webkit-scrollbar-thumb,
+.links__grid::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 2px; }
+
+/* ============================================================
+   Global button transition fallback
+   ============================================================ */
+button { transition: filter 0.2s ease, transform 0.15s ease, opacity 0.2s ease; }
+button:disabled { transform: none !important; opacity: 0.38; }
+
+/* ============================================================
+   Focus ring for all inputs
+   ============================================================ */
+input:focus, input:focus-visible {
+  outline: none;
+  border-color: var(--accent-blue) !important;
+  box-shadow: 0 0 0 3px rgba(91, 110, 225, 0.15) !important;
+}
+
+/* ============================================================
+   Entry Animations
+   ============================================================ */
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.85); }
+  to   { opacity: 1; transform: scale(1); }
+}
