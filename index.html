@@ -117,32 +117,39 @@
       <h2 class="widget__title" id="links-title">Quick Links</h2>
 
       <form class="links__form" id="links-form" aria-label="Add new quick link">
-        <label for="links-label" class="sr-only">Link label</label>
-        <input
-          type="text"
-          id="links-label"
-          placeholder="Label (e.g. GitHub)"
-          autocomplete="off"
-          aria-label="Link label"
-        />
-        <label for="links-url" class="sr-only">Link URL</label>
-        <input
-          type="url"
-          id="links-url"
-          placeholder="URL (e.g. https://...)"
-          autocomplete="url"
-          aria-label="Link URL"
-        />
-        <button type="submit">Add</button>
+        <fieldset class="links__fieldset">
+          <legend class="links__legend">Add Quick Link</legend>
+
+          <label for="links-label" class="sr-only">Link label</label>
+          <input
+            type="text"
+            id="links-label"
+            name="links-label"
+            placeholder="Label (e.g. GitHub)"
+            autocomplete="off"
+            aria-label="Link label"
+          />
+
+          <label for="links-url" class="sr-only">Link URL</label>
+          <input
+            type="url"
+            id="links-url"
+            name="links-url"
+            placeholder="URL (e.g. https://...)"
+            autocomplete="url"
+            aria-label="Link URL"
+          />
+
+          <button type="submit" class="links__add-btn">Add</button>
+        </fieldset>
       </form>
 
-      <div
+      <ul
         class="links__grid"
         id="links-grid"
-        role="list"
         aria-label="Quick links"
         aria-live="polite"
-      ></div>
+      ></ul>
     </section>
 
   </main>

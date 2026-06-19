@@ -483,9 +483,8 @@ const QuickLinks = {
   },
 
   renderItem(link) {
-    const wrapper = document.createElement('div');
+    const wrapper = document.createElement('li');
     wrapper.className = 'link__item';
-    wrapper.setAttribute('role', 'listitem');
 
     const anchor = document.createElement('a');
     anchor.href   = link.url;
@@ -511,8 +510,9 @@ const QuickLinks = {
     if (!grid) return;
     grid.innerHTML = '';
     if (this.links.length === 0) {
-      const empty = document.createElement('p');
+      const empty = document.createElement('li');
       empty.className   = 'links__empty';
+      empty.setAttribute('role', 'listitem');
       empty.textContent = 'No links yet. Add your favourite websites!';
       grid.appendChild(empty);
       return;

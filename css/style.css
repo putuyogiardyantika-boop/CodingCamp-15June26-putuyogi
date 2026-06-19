@@ -488,6 +488,36 @@ time, output {
   gap: var(--spacing-sm);
 }
 
+.links__fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.links__legend {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+}
+
+.links__add-btn { display: inline-block; }
+
+@media (min-width: 600px) {
+  .links__fieldset {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+  .links__legend { margin-right: var(--spacing-sm); margin-bottom: 0; }
+  .links__fieldset input { flex: 1; }
+  .links__add-btn { flex: 0 0 auto; }
+}
+
 .links__form input {
   padding: var(--spacing-sm) var(--spacing-md);
   border: 1.5px solid var(--card-border);
@@ -529,6 +559,9 @@ time, output {
   overflow-x: visible;
   padding: 8px 8px 4px 4px; /* ruang untuk tombol × yang overflow */
 }
+
+/* Reset list semantics for the grid when using <ul> */
+.links__grid { list-style: none; padding-left: 0; }
 
 .link__item {
   position: relative;
@@ -578,11 +611,18 @@ time, output {
 
 .links__empty {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   text-align: center;
   padding: var(--spacing-md);
   font-family: var(--font-family);
+  /* Make empty state span all grid columns and center itself */
+  grid-column: 1 / -1;
+  justify-self: center;
+  align-self: center;
+  max-width: 420px;
+  margin: 0 auto;
 }
+
 
 /* ============================================================
    Theme Toggle Button
